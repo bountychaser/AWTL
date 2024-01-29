@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Todo List</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #e74c3c; /* Changed to red color for buttons */
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    button.update {
+      background-color: #2ecc71; /* Changed to green color for the update button */
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background-color: #fff;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    li:hover {
+      background-color: #f0f0f0;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: green;
+    }
+
+    li span {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Todo List</h1>
+  <input type="text" id="new-todo" placeholder="Add a new todo">
+  <button onclick="addTodo()">Add</button>
+  <ul id="todo-list"></ul>
+  <script>
+    const todoList = document.getElementById('todo-list');
+    const newTodoInput = document.getElementById('new-todo');
+
+    function addTodo() {
+      const newTodo = newTodoInput.value.trim();
+      if (newTodo) {
+        const li = document.createElement('li');
+        const todoText = document.createElement('span');
+        todoText.textContent = newTodo;
+        li.appendChild(todoText);
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.addEventListener('change', () => {
+          li.classList.toggle('completed');
+          todoText.style.color = checkbox.checked ? 'green' : 'red';
+        });
+        li.appendChild(checkbox);
+
+        // Add buttons for actions
+        const deleteButton = createButton('Delete', () => {
+          li.remove();
+        });
+        const updateButton = createButton('Update', () => {
+          // Implement logic for updating todo
+          const updatedText = prompt('Enter updated todo:', todoText.textContent);
+          if (updatedText !== null) {
+            todoText.textContent = updatedText;
+          }
+        });
+
+        li.appendChild(deleteButton);
+        li.appendChild(updateButton);
+        todoList.appendChild(li);
+        newTodoInput.value = '';
+      }
+    }
+
+    function createButton(text, onClick) {
+      const button = document.createElement('button');
+      button.textContent = text;
+      button.addEventListener('click', onClick);
+      if (text === 'Update') {
+        button.classList.add('update');
+      }
+      return button;
+    }
+  </script>
+</body>
+</html>
