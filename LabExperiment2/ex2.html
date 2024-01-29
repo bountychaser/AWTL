@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrolling Navbar Animation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background-color: #8e44ad; /* Purple color */
+      padding: 15px;
+      color: white;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      transition: top 0.3s;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center; /* Center-align items vertically */
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s;
+    }
+
+    header a:hover {
+      color: #f1c40f; /* Yellow color on hover */
+    }
+
+    .nav-links {
+      display: flex;
+    }
+
+    section {
+      height: 1000px;
+      padding: 20px;
+      margin-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center-align items horizontally */
+      justify-content: center; /* Center-align items vertically */
+    }
+
+    h1, h2, p {
+      color: #333;
+      text-align: center; /* Center-align text within the section */
+    }
+
+    #article {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    ::after {
+      content: '';
+      display: block;
+      height: 20px;
+    }
+
+    .progress-container {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 5px;
+      height: 100%;
+      background-color: #8e44ad; /* Purple color for the progress bar */
+    }
+
+    .progress-bar {
+      height: 0;
+      width: 100%;
+      background-color: #f1c40f; /* Yellow color for the progress bar */
+      transition: height 0.2s;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Contact</a>
+  </div>
+</header>
+
+<div class="progress-container">
+  <div class="progress-bar" id="myBar"></div>
+</div>
+
+<section id="home">
+  <h1>Welcome to Our Website!</h1>
+  <div id="article">
+    <h2>Article: Israel and Palestine</h2>
+    <p>
+      The Israel–Palestine conflict is a long-lasting and deeply rooted issue involving historical, political, and cultural complexities.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in turpis vitae urna tincidunt volutpat nec vitae odio. 
+      Nullam hendrerit euismod dolor id elementum. Vivamus id justo et sapien feugiat lacinia. Nullam congue semper dolor id dapibus.
+      Proin dapibus, mauris vel scelerisque tincidunt, elit magna ultrices libero, nec pharetra odio mauris eu elit. 
+      Morbi vel justo non elit dapibus efficitur.
+    </p>
+    <!-- Add more content as needed -->
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+  let prevScrollPos = $(window).scrollTop();
+  const header = $('header');
+  const progressBar = document.getElementById('myBar');
+
+  $(window).scroll(function() {
+    const currentScrollPos = $(window).scrollTop();
+    const scrollHeight = $(document).height() - $(window).height();
+    const scrollPercentage = (currentScrollPos / scrollHeight) * 100;
+
+    if (prevScrollPos > currentScrollPos) {
+      header.css('top', '0');
+    } else {
+      header.css('top', `-${header.height()}px`);
+    }
+
+    progressBar.style.height = `${scrollPercentage}%`;
+
+    prevScrollPos = currentScrollPos;
+  });
+</script>
+
+</body>
+</html>
