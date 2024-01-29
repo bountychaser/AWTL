@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navigation</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+            text-align: center;
+            transition: background-color 0.5s ease-in-out, padding 0.5s ease-in-out;
+            z-index: 1000;
+        }
+
+        section {
+            padding: 60px 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>My Website</h1>
+    </nav>
+
+    <section>
+        <h2>Section 1</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+    </section>
+
+    <section>
+        <h2>Section 2</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. ...</p>
+    </section>
+
+    <!-- Add more sections as needed -->
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var nav = $('nav');
+            var navHeight = nav.outerHeight();
+            var lastScrollTop = 0;
+
+            $(window).scroll(function () {
+                var scrollTop = $(this).scrollTop();
+
+                // Add or remove background and padding based on scroll direction
+                if (scrollTop > lastScrollTop) {
+                    // Scrolling down
+                    nav.css({'background-color': 'rgba(0, 0, 0, 0.8)', 'padding': '5px 0'});
+                } else {
+                    // Scrolling up
+                    nav.css({'background-color': '#333', 'padding': '10px'});
+                }
+
+                lastScrollTop = scrollTop;
+            });
+        });
+    </script>
+</body>
+</html>

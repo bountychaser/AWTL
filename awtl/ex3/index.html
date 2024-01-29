@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Task Management App</title>
+</head>
+<body>
+    <div class="board" id="todo-board" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>To Do</h2>
+        <ul id="todo-list" class="task-list"<!--Create a task management application with drag-and-drop functionality. Users
+            can move tasks between different boards (e.g., To Do, In Progress, Done) using
+            drag-and-drop interactions. Implement persistence using local storage.-->
+            <!DOCTYPE html>
+            <html lang="en">
+              <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Drag and Drop Task Manager</title>
+                <style>
+                  body {
+                    font-family: "Arial", sans-serif;
+                    background-color: #f5f5f5;
+                    margin: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                  }
+            
+                  .board {
+                    background-color: #fff;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    padding: 16px;
+                    margin: 16px;
+                    width: 300px;
+                    min-height: 300px;
+                  }
+            
+                  .task {
+                    background-color: #4caf50;
+                    color: #fff;
+                    border-radius: 4px;
+                    padding: 8px;
+                    margin-bottom: 8px;
+                    cursor: pointer;
+                    position: relative;
+                  }
+            
+                  .task:hover {
+                    background-color: #45a049;
+                  }
+            
+                  .add-task-form {
+                    margin-top: 16px;
+                  }
+            
+                  .add-task-form input {
+                    width: 70%;
+                    padding: 8px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    margin-right: 8px;
+                  }
+            
+                  .add-task-form button {
+                    padding: 8px;
+                    background-color: #4caf50;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                  }
+            
+                  .delete-task {
+                    position: absolute;
+                    top: 2px;
+                    right: 2px;
+                    cursor: pointer;
+                    color: #e74c3c;
+                  }
+                </style>
+              </head>
+              <body>
+                <div
+                  class="board"
+                  id="todo"
+                  ondrop="drop(event)"
+                  ondragover="allowDrop(event)"
+                >
+                  <h3>To Do</h3>
+                  <div class="task" id="task1" draggable="true" ondragstart="drag(event)">
+                    Task 1
+                    <span class="delete-task" onclick="deleteTask('task1')">X</span>
+                  </div>
+                  <div class="task" id="task2" draggable="true" ondragstart="drag(event)">
+                    Task 2
+                    <span class="delete-task" onclick="deleteTask('task2')">X</span>
+                  </div>
+            
+                  <div class="add-task-form">
+                    <input type="text" id="newTask" placeholder="Enter task name" />
+                    <button onclick="addTask()">Add Task</button>
+                  </div>
+                </div>
+            
+                <div
+                  class="board"
+                  id="inProgress"
+                  ondrop="drop(event)"
+                  ondragover="allowDrop(event)"
+                >
+                  <h3>In Progress</h3>
+                </div>
+            
+                <div
+                  class="board"
+                  id="done"
+                  ondrop="drop(event)"
+                  ondragover="allowDrop(event)"
+                >
+                  <h3>Done</h3>
+                </div>
+            
+                <script>
+                  function allowDrop(event) {
+                    event.preventDefault();
+                  }
+            
+                  function drag(event) {
+                    event.dataTransfer.setData("text", event.target.id);
+                  }
+            
+                  function drop(event) {
+                    event.preventDefault();
+                    var data = event.dataTransfer.getData("text");
+                    var draggedElement = document.getElementById(data);
+                    var targetBoard = event.target.closest(".board");
+            
+                    if (targetBoard) {
+                      targetBoard.appendChild(draggedElement);
+                    }
+            
+                    saveToLocalStorage();
+                  }
+            
+                  function addTask() {
+                    var newTaskName = document.getElementById("newTask").value;
+            
+                    if (newTaskName.trim() !== "") {
+                      var newTask = document.createElement("div");
+                      newTask.className = "task";
+                      newTask.id = "task" + new Date().getTime();
+                      newTask.draggable = true;
+                      newTask.innerHTML =
+                        newTaskName +
+                        '<span class="delete-task" onclick="deleteTask(\'' +
+                        newTask.id +
+                        "')\">X</span>";
+                      newTask.ondragstart = function (event) {
+                        drag(event);
+                      };
+            
+                      document.getElementById("todo").appendChild(newTask);
+            
+                      saveToLocalStorage();
+            
+                      document.getElementById("newTask").value = "";
+                    }
+                  }
+            
+                  function deleteTask(taskId) {
+                    var task = document.getElementById(taskId);
+            
+                    if (task) {
+                      task.parentNode.removeChild(task);
+            
+                      saveToLocalStorage();
+                    }
+                  }
+            
+                  function saveToLocalStorage() {
+                    var boards = document.querySelectorAll(".board");
+                    var taskLists = {};
+            
+                    boards.forEach((board) => {
+                      var boardId = board.id;
+                      var tasks = board.querySelectorAll(".task");
+                      var taskIds = [];
+            
+                      tasks.forEach((task) => {
+                        taskIds.push(task.id);
+                      });
+            
+                      taskLists[boardId] = taskIds;
+                    });
+            
+                    localStorage.setItem("taskLists", JSON.stringify(taskLists));
+                  }
+            
+                  function loadFromLocalStorage() {
+                    var taskLists = JSON.parse(localStorage.getItem("taskLists"));
+            
+                    if (taskLists) {
+                      Object.keys(taskLists).forEach((boardId) => {
+                        var board = document.getElementById(boardId);
+                        var taskIds = taskLists[boardId];
+            
+                        taskIds.forEach((taskId) => {
+                          var task = document.getElementById(taskId);
+                          if (task) {
+                            task.draggable = true;
+                            task.ondragstart = function (event) {
+                              drag(event);
+                            };
+                            board.appendChild(task);
+                          }
+                        });
+                      });
+                    }
+                  }
+            
+                  loadFromLocalStorage();
+                </script>
+              </body>
+            </html> ondragover="dragOver(event)" ondrop="drop(event)"></ul>
+    </div>
+
+    <div class="board" id="inprogress-board" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>In Progress</h2>
+        <ul id="inprogress-list" class="task-list" ondragover="dragOver(event)" ondrop="drop(event)"></ul>
+    </div>
+
+    <div class="board" id="done-board" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>Done</h2>
+        <ul id="done-list" class="task-list" ondragover="dragOver(event)" ondrop="drop(event)"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
